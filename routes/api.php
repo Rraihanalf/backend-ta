@@ -27,6 +27,18 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/calon-siswas', [CalonSiswaController::class, 'store']);
 
+Route::middleware('auth:sanctum')->get('/cek-user', function (Request $request) {
+    return $request->user();
+});
+
+Route::middleware('auth:sanctum')->get('/cek-gate', function (Request $request) {
+    if (Gate::allows('admin')) {
+        return 'ADMIN BOLEH MASUK';
+    }
+
+    return response('FORBIDDEN', 403);
+});
+
 Route::middleware(['auth:sanctum', 'can:admin'])->group(function () {
     Route::get('/admin-only', function () {
         return 'Hanya Admin!';
